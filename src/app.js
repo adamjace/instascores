@@ -5,36 +5,45 @@ require('dotenv').config()
 const Timer = require('./lib/timer')
 const Logger = require('./lib/logger')
 
+const repo = require('./db/repo')
 const getscores = require('./lib/getscores')
 const draw = require('./lib/draw')
-const async = require('./lib/async')
-
-//const { postToInstagram } = require('./lib/instagram')
-//const { uploadToS3Bucket } = require('./lib/aws')
+const { run } = require('./lib/utils')
+const { postToInstagram } = require('./lib/instagram')
 
 const timer = new Timer();
 
-(() => {
+(async () => {
   timer.start()
 
-  getscores().then((data) => {
-    if (data.length === 0) {
-      complete()
+  const scores = await getscores()
+  if (scores.length === 0)
+    complete()
+
+  for (let [index, fixture] of scores.entries()) {
+
+    let res = await run(draw, fixture)
+    if (res.error) {
+      Logger.log('error', res.error)
+      complete(scores, index, false)
+      continue
     }
-    data.map((fixture, index) => {
-      Logger.log('info', `drawing fixture ${JSON.stringify(fixture)}`)
-      draw(fixture)
-        //.then(uploadToS3Bucket)
-        //.then(postToInstagram)
-        .then(complete.bind(this, data, index))
-    })
-  })
+
+    // res = await run(postToInstagram, res.value)
+    // if (res.error) {
+    //   Logger.log('error', res.error)
+    //   complete(scores, index, false)
+    //   continue
+    // }
+    complete(scores, index, true)
+  }
 })()
 
-const complete = (data, index, ok) => {
-  if (!data || index === data.length - 1) {
+const complete = async (scores, index, ok) => {
+  if (ok) await repo.set(scores[index].id)
+  if (!scores || index === scores.length - 1) {
     timer.stop()
-    Logger.log('info', `${data ? data.length : 'No'} fixtures processed`)
+    Logger.log('info', `${scores ? scores.length : 'No'} fixtures processed`)
     Logger.log('info', timer.report)
     process.exit()
   }

@@ -9,6 +9,16 @@ const hashcode = (input) => {
   return hash
 }
 
+const run = async (func, ...args) => {
+  try {
+    const value = await func(...args)
+    return { value }
+  } catch(error) {
+    return { error }
+  }
+}
+
 module.exports = {
-  hashcode
+  hashcode,
+  run
 }

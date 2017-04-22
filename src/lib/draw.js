@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const Canvas = require('canvas')
 const async = require('./async')
+const Logger = require('./logger')
 
 const draw = (fixture) => {
 
@@ -18,7 +19,7 @@ const draw = (fixture) => {
   ctx.fillText(fixture.away.team, 50, 250)
 
   return async((resolve, reject) => {
-    const fileStream = canvas.createPNGStream().pipe(fs.createWriteStream(path.join(`images/${fixture.id}.png`)))
+    const fileStream = canvas.createPNGStream().pipe(fs.createWriteStream(path.join(`images/${fixture.id}.jpg`)))
     fileStream.on('finish', () => resolve(fixture))
     fileStream.on('error', (error) => {
       Logger.log('error', error)
