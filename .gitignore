@@ -44,5 +44,5 @@ redis.sh
 # config
 .env
 
-# images
-images/
+# output
+output/

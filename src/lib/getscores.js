@@ -1,11 +1,12 @@
 'use strict'
 
+require('dotenv').config()
 const request = require('request-promise')
 const config = require('../config')
 const repo = require('../db/repo')
 const { hashcode } = require('./utils')
+const { getTeam } = require('../competitions')
 
-const baseUrl = 'http://api.football-data.org/v1/competitions/426'
 const options = (uri) => {
   return {
     uri,
@@ -16,45 +17,53 @@ const options = (uri) => {
   }
 }
 
-const getCurrentMatchDay = async () => {
-  const data = await request(options(baseUrl))
-  return data.currentMatchday
+const baseUrl = (id) => {
+  return `http://api.football-data.org/v1/competitions/${id}`
 }
 
-const getFixtures = async (matchDay) => {
+const getCurrentMatchDay = async (id) => {
+  const data = await request(options(baseUrl(id)))
+  return 32//data.currentMatchday
+}
+
+const getFixtures = async (comp, matchDay) => {
   let fixtures = []
-  const data = await request(options(`${baseUrl}/fixtures?matchday=${matchDay}`))
+  const data = await request(options(`${baseUrl(comp.id)}/fixtures?matchday=${matchDay}`))
 
   if (data && data.fixtures) {
     for (let item of data.fixtures) {
-      const fixture = transformFixture(item)
-      //if (fixture.status === 'FINISHED') {
+      const fixture = transformFixture(comp, item)
+      if (fixture.status === 'FINISHED') {
         const shouldSkip = await repo.get(fixture.id)
         if (!shouldSkip)
           fixtures.push(fixture)
-      //}
+      }
     }
   }
   return fixtures
 }
 
-const transformFixture = (fixture) => {
+const transformFixture = (comp, fixture) => {
   const { matchDay, awayTeamName, homeTeamName, status } = fixture
+  const homeTeam = getTeam(comp, homeTeamName)
+  const awayTeam = getTeam(comp, awayTeamName)
   return {
     id: hashcode(`${matchDay}${homeTeamName}${awayTeamName}`),
     status: status,
     home: {
-      team: fixture.homeTeamName,
-      goals: fixture.result.goalsHomeTeam
+      team: homeTeam.short,
+      score: fixture.result.goalsHomeTeam,
+      tags: homeTeam.tags
     },
     away: {
-      team: fixture.awayTeamName,
-      goals: fixture.result.goalsAwayTeam
+      team: awayTeam.short,
+      score: fixture.result.goalsAwayTeam,
+      tags: awayTeam.tags
     }
   }
 }
 
-module.exports = async () => {
-  const currentMatchday = await getCurrentMatchDay()
-  return await getFixtures(currentMatchday)
+module.exports = async (comp) => {
+  const currentMatchday = await getCurrentMatchDay(comp.id)
+  return await getFixtures(comp, currentMatchday)
 }

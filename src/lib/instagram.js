@@ -3,6 +3,7 @@
 require('dotenv').config()
 const Client = require('instagram-private-api').V1;
 const config = require('../config')
+const { getTeam } = require('../competitions')
 
 const device = new Client.Device('instascores');
 const storage = new Client.CookieFileStorage(__dirname + '/cookies/instascores.json');
@@ -16,11 +17,15 @@ const login = async () => {
   )
 }
 
-const post = async (path) => {
+const post = async (path, comp, fixture) => {
   const session = await login()
   const upload = await Client.Upload.photo(session, path)
-  const done = await Client.Media.configurePhoto(session, upload.params.uploadId, 'test');
+  const done = await Client.Media.configurePhoto(session, upload.params.uploadId, tags(comp, fixture));
   return upload
 }
 
-post('images/1529068363.jpg')
+const tags = (comp, fixture) => {
+  return `${fixture.home.tags} ${fixture.away.tags} ${comp.tags}`
+}
+
+module.exports = post
