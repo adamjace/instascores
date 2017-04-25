@@ -1,10 +1,12 @@
+'use strict'
+
 module.exports = {
   id: 426,
   tags: '#epl #premierleague',
   teams: [
     {
       name: 'Hull City FC',
-      short: 'Hull',
+      short: 'Hull City',
       tags: '#hull #hullfc'
     },
     {

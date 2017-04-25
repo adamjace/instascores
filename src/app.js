@@ -5,13 +5,14 @@ require('dotenv').config()
 const Timer = require('./lib/timer')
 const Logger = require('./lib/logger')
 
+const config = require('./config')
 const repo = require('./db/repo')
 const getscores = require('./lib/getscores')
 const draw = require('./lib/draw')
-const { competitions } = require('./competitions/index')
+const instagram = require('./lib/instagram')
 
+const { competitions } = require('./competitions/index')
 const { run } = require('./lib/utils')
-const { postToInstagram } = require('./lib/instagram')
 
 const timer = new Timer();
 
@@ -32,11 +33,13 @@ const timer = new Timer();
         continue
       }
 
-      res = await run(postToInstagram, res.value, comp, fixture)
-      if (res.error) {
-        Logger.log('error', res.error)
-        complete(scores, index, false)
-        continue
+      if (config.enable_posting) {
+        res = await run(instagram.post, res.value, comp, fixture)
+        if (res.error) {
+          Logger.log('error', res.error)
+          complete(scores, index, false)
+          continue
+        }
       }
 
       complete(scores, index, true)

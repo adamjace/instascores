@@ -44,12 +44,13 @@ const getFixtures = async (comp, matchDay) => {
 }
 
 const transformFixture = (comp, fixture) => {
-  const { matchDay, awayTeamName, homeTeamName, status } = fixture
+  const { matchday, awayTeamName, homeTeamName, status } = fixture
   const homeTeam = getTeam(comp, homeTeamName)
   const awayTeam = getTeam(comp, awayTeamName)
   return {
-    id: hashcode(`${matchDay}${homeTeamName}${awayTeamName}`),
-    status: status,
+    id: hashcode(`${matchday}${homeTeamName}${awayTeamName}`),
+    status,
+    matchDay: matchday,
     home: {
       team: homeTeam.short,
       score: fixture.result.goalsHomeTeam,

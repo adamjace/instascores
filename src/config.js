@@ -8,11 +8,12 @@ const config = {
   redis_password: process.env.REDIS_PASSWORD,
   football_data_auth_token: process.env.FOOTBALL_DATA_AUTH_TOKEN,
   instagram_username: process.env.INSTAGRAM_USERNAME,
-  instagram_password: process.env.INSTAGRAM_PASSWORD
+  instagram_password: process.env.INSTAGRAM_PASSWORD,
+  enable_posting: process.env.ENABLE_POSTING === true
 }
 
 for (const key of Object.keys(config)) {
-  if (!config[key]) {
+  if (config[key] == null) {
     throw new Error(`Invalid configuration. Missing "${key}"`)
   }
 }

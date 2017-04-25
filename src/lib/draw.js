@@ -1,3 +1,5 @@
+'use strict'
+
 const fs = require('fs')
 const path = require('path')
 const Canvas = require('canvas')
@@ -5,34 +7,96 @@ const async = require('./async')
 const Logger = require('./logger')
 const _ = require('lodash')
 
-const opensans = new Canvas.Font('OpenSans-Bold', 'src/images/fonts/OpenSans-Bold.ttf')
+const thin = new Canvas.Font('thin', 'src/images/fonts/Radikal Thin.otf')
+const bold = new Canvas.Font('bold', 'src/images/fonts/Radikal Bold.otf')
 
 const draw = (fixture) => {
+
   const canvas = new Canvas(1080, 1080)
   const ctx = canvas.getContext('2d')
+  ctx.addFont(thin)
+  ctx.addFont(bold)
 
-  const img = new Canvas.Image()
-  img.src = fs.readFileSync('src/images/oldtrafford.jpg')
-  ctx.drawImage(img, 0, 0)
-
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.addFont(opensans);
-  ctx.font = 'bold 110px OpenSans-Bold'
-  ctx.fillStyle = 'white';
-  ctx.fillText(fixture.home.score + ' ' + _.toUpper(fixture.home.team), 100, 350)
-  ctx.fillText(fixture.away.score + ' ' + _.toUpper(fixture.away.team), 100, 500)
+  template(fixture, canvas, ctx)
 
   return async((resolve, reject) => {
     const imagePath = `output/${fixture.id}.jpg`
     const fileStream = canvas.createJPEGStream({
       quality: 100
-    }).pipe(fs.createWriteStream(path.join(imagePath)))
+    }).pipe(fs.createWriteStream(imagePath))
     fileStream.on('finish', () => resolve(imagePath))
     fileStream.on('error', (error) => handleError(reject, error))
   })
 
+}
+
+const template = (fixture, canvas, ctx) => {
+
+  // draw background
+  const bg = new Canvas.Image()
+  bg.src = getRandomFile('src/images/bg')
+  ctx.drawImage(bg, 0, 0)
+
+  const overlay = new Canvas.Image()
+  overlay.src = fs.readFileSync('src/images/overlay.png')
+  ctx.drawImage(overlay, 0, 0)
+  //ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+  //ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  // draw logo
+  const logo = new Canvas.Image()
+  //logo.src = getRandomFile('src/images/logo')
+  logo.src = fs.readFileSync('src/images/logo/lion-white.png')
+  ctx.drawImage(logo, 800, 750)
+
+  const left = 80
+  const top1 = 220
+  const top2 = 415
+  const top3 = 565
+  const homeTeam = fixture.home.team
+  const awayTeam = fixture.away.team
+  const matchDay = `Match day ${fixture.matchDay}`
+  const fullTime = 'Full-time'
+
+  // fonts
+  // team names
+  ctx.font = '100px bold'
+  ctx.fillStyle = 'rgba(0,0,0,.7)'
+  const home = ctx.measureText(homeTeam);
+  ctx.fillRect(0, top2 - 100, home.width + 190, 130)
+  const away = ctx.measureText(awayTeam);
+  ctx.fillRect(0, top3 - 100, away.width + 190, 130)
+
+  ctx.fillStyle = '#FFF'
+  ctx.fillText(homeTeam, left, top2)
+  ctx.fillText(awayTeam, left, top3)
+
+  // scores
+  ctx.font = '85px thin'
+  ctx.fillText(fixture.home.score, home.width + 110, top2)
+  ctx.fillText(fixture.away.score, away.width + 110, top3)
+
+  // full time
+  ctx.font = '30px bold'
+  ctx.fillStyle = 'rgba(235,255,0, 1)'
+  const md = ctx.measureText(matchDay);
+  ctx.fillRect(0, top1 - 32, md.width + 20, 45)
+  const ft = ctx.measureText(fullTime);
+  ctx.fillRect(0, top1 - 32 + 50, ft.width + 20, 45)
+
+  ctx.fillStyle = '#000'
+  ctx.fillText(matchDay, 10, top1)
+  ctx.fillText(fullTime, 10, top1 + 50)
+}
+
+const getRandomFile = (path) => {
+  const files = fs.readdirSync(path)
+  const file = files[random(0, files.length - 1)]
+  return `${path}/${file}`
+}
+
+const random = (a, b) => {
+  return Math.floor(Math.random() * b) + a
 }
 
 const handleError = (reject, error) => {
