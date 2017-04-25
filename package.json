@@ -17,6 +17,7 @@
     "bluebird": "^3.4.1",
     "dotenv": "^4.0.0",
     "instagram-private-api": "^0.5.16",
+    "node-schedule": "^1.2.1",
     "redis": "^2.6.2",
     "request-promise": "^4.2.0"
   },

@@ -51,17 +51,17 @@ const template = (fixture, canvas, ctx) => {
 
   const left = 80
   const top1 = 220
-  const top2 = 415
+  const top2 = 425
   const top3 = 565
   const homeTeam = fixture.home.team
   const awayTeam = fixture.away.team
-  const matchDay = `Match day ${fixture.matchDay}`
+  const matchDay = `Matchday ${fixture.matchDay}`
   const fullTime = 'Full-time'
 
   // fonts
   // team names
   ctx.font = '100px bold'
-  ctx.fillStyle = 'rgba(0,0,0,.7)'
+  ctx.fillStyle = 'rgba(0,0,0,.85)'
   const home = ctx.measureText(homeTeam);
   ctx.fillRect(0, top2 - 100, home.width + 190, 130)
   const away = ctx.measureText(awayTeam);
@@ -91,7 +91,7 @@ const template = (fixture, canvas, ctx) => {
 
 const getRandomFile = (path) => {
   const files = fs.readdirSync(path)
-  const file = files[random(0, files.length - 1)]
+  const file = files[random(0, files.length + 5)]
   return `${path}/${file}`
 }
 

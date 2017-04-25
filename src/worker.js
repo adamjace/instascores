@@ -1,7 +1,5 @@
 'use strict'
 
-require('dotenv').config()
-const schedule = require('node-schedule')
 const Timer = require('./lib/timer')
 const Logger = require('./lib/logger')
 const config = require('./config')
@@ -18,11 +16,9 @@ const timer = new Timer();
 // responsible for fetching results, processing images
 // and posting to instagram
 const startWorker = async () => {
-  timer.start()
-  Logger.log('info', 'Starting worker')
-
   for (let comp of competitions) {
-    const processed = { done: [], failed: [] }
+    timer.start()
+
     const scores = await getscores(comp)
     if (scores.length === 0)
       complete()
@@ -31,7 +27,7 @@ const startWorker = async () => {
       let res = await run(draw, fixture)
       if (res.error) {
         Logger.log('error', res.error)
-        complete(scores, index, false, processed)
+        complete(scores, index, false)
         continue
       }
 
@@ -39,42 +35,27 @@ const startWorker = async () => {
         res = await run(instagram.post, res.value, comp, fixture)
         if (res.error) {
           Logger.log('error', res.error)
-          complete(scores, index, false, processed)
+          complete(scores, index, false)
           continue
         }
       }
-      complete(scores, index, true, processed)
+      complete(scores, index, true)
     }
   }
 }
 
-// handles completed attempts at:
-// 1) processing artwork
-// 2) posting to instragram
-const complete = async (scores, index, ok, processed) => {
-  const id = scores[index].id
-  if (ok) {
-    await repo.set(id)
-    processed.done.push(id)
-  } else {
-    processed.failed.push(id)
-  }
-
+const complete = async (scores, index, ok) => {
+  if (ok) await repo.set(scores[index].id)
   if (!scores || index === scores.length - 1) {
     timer.stop()
-    if (!scores) {
-      Logger.log('info', `No fixtures processed`)
-    }
-    else {
-      if (processed.done.length > 0)
-        Logger.log('success', `${processed.done.length} processed`)
-      if (processed.failed.length > 0)
-        Logger.log('warning', `${processed.failed.length} failed`)
-    }
+    Logger.log('info', `${scores ? scores.length : 'No'} fixtures processed`)
     Logger.log('info', timer.report)
     process.exit()
   }
 }
 
-//schedule.scheduleJob('*/5 * * * *', async startWorker)
-startWorker()
+schedule.scheduleJob('*/5 * * * *', async startWorker)
+
+module.exports = {
+  run: startWorker
+}
