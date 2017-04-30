@@ -12,7 +12,7 @@ const instagram = require('./lib/instagram')
 const { competitions } = require('./competitions/index')
 const { run } = require('./lib/utils')
 
-const timer = new Timer();
+const timer = new Timer()
 
 // startWorker is our main worker method
 // responsible for fetching results, processing images
@@ -78,4 +78,4 @@ const complete = async (scores, index, ok, processed) => {
   }
 }
 
-schedule.scheduleJob('*/5 * * * *', async startWorker)
+schedule.scheduleJob('*/2 * * * * *', async test)
