@@ -19,7 +19,7 @@ const post = async (path, comp, fixture) => {
   const session = await login()
   const upload = await Client.Upload.photo(session, path)
 
-  await Client.Media.configurePhoto(session, upload.params.uploadId, '');
+  await Client.Media.configurePhoto(session, upload.params.uploadId, tags);
 
   return upload
 }
