@@ -9,7 +9,7 @@ const config = {
   football_data_auth_token: process.env.FOOTBALL_DATA_AUTH_TOKEN,
   instagram_username: process.env.INSTAGRAM_USERNAME,
   instagram_password: process.env.INSTAGRAM_PASSWORD,
-  enable_posting: process.env.ENABLE_POSTING === true
+  enable_posting: process.env.ENABLE_POSTING === 'true'
 }
 
 for (const key of Object.keys(config)) {
