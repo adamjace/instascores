@@ -78,4 +78,4 @@ const complete = async (scores, index, ok, processed) => {
   }
 }
 
-schedule.scheduleJob('*/2 * * * * *', async test)
+schedule.scheduleJob('*/5 * * * *', startWorker)
