@@ -23,7 +23,7 @@ const baseUrl = (id) => {
 
 const getCurrentMatchDay = async (id) => {
   const data = await request(options(baseUrl(id)))
-  return 22//data.currentMatchday
+  return data.currentMatchday
 }
 
 const getFixtures = async (comp, matchDay) => {

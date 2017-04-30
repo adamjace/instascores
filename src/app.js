@@ -52,12 +52,14 @@ const startWorker = async () => {
 // 1) processing artwork
 // 2) posting to instragram
 const complete = async (scores, index, ok, processed) => {
-  const id = scores[index].id
-  if (ok) {
-    await repo.set(id)
-    processed.done.push(id)
-  } else {
-    processed.failed.push(id)
+  if (scores) {
+    const id = scores[index].id
+    if (ok) {
+      await repo.set(id)
+      processed.done.push(id)
+    } else {
+      processed.failed.push(id)
+    }
   }
 
   if (!scores || index === scores.length - 1) {
@@ -76,5 +78,4 @@ const complete = async (scores, index, ok, processed) => {
   }
 }
 
-//schedule.scheduleJob('*/5 * * * *', async startWorker)
-startWorker()
+schedule.scheduleJob('*/5 * * * *', async startWorker)
