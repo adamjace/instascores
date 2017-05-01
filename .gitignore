@@ -36,10 +36,9 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-
 key.pem
 launch.sh
 redis.sh
 .env
-src/lib/cookies/instascores.json
+src/lib/cookies
 output

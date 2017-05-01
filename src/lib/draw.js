@@ -7,8 +7,8 @@ const async = require('./async')
 const Logger = require('./logger')
 const _ = require('lodash')
 
-const thin = new Canvas.Font('thin', 'src/images/fonts/Radikal.otf')
-const bold = new Canvas.Font('bold', 'src/images/fonts/Radikal Bold.otf')
+const thin = new Canvas.Font('Radikal', 'src/images/fonts/Radikal.otf')
+const bold = new Canvas.Font('Radikal Bold', 'src/images/fonts/Radikal Bold.otf')
 
 const themes = [
   {
@@ -94,7 +94,7 @@ const template = (fixture, canvas, ctx) => {
 
   // fonts
   // team names
-  ctx.font = '115px "thin"'
+  ctx.font = '115px "Radikal"'
   ctx.fillStyle = theme.teamNameBg
   const home = ctx.measureText(homeTeam);
   ctx.fillRect(0, top2 - 115, home.width + (fixture.home.score < 10 ? 210 : 250), 150)
@@ -106,12 +106,12 @@ const template = (fixture, canvas, ctx) => {
   ctx.fillText(awayTeam, left, top3)
 
   // scores
-  ctx.font = '105px "bold"'
+  ctx.font = '105px "Radikal Bold"'
   ctx.fillText(fixture.home.score, home.width + 110, top2)
   ctx.fillText(fixture.away.score, away.width + 110, top3)
 
   // full time
-  ctx.font = '30px "bold"'
+  ctx.font = '30px "Radikal Bold"'
   ctx.fillStyle = theme.preTextBg
   const md = ctx.measureText(matchDay);
   ctx.fillRect(0, top1 - 32, md.width + 20, 45)
