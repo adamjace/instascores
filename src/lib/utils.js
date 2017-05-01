@@ -9,6 +9,9 @@ const hashcode = (input) => {
   return hash
 }
 
+// utility method to neatly call and handle async/await
+// responses in a formatted map object
+// { value, error }
 const run = async (func, ...args) => {
   try {
     const value = await func(...args)
