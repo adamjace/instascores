@@ -10,7 +10,8 @@ const config = {
   instagram_username: process.env.INSTAGRAM_USERNAME,
   instagram_password: process.env.INSTAGRAM_PASSWORD,
   enable_posting: process.env.ENABLE_POSTING === 'true',
-  schedule_pattern: process.env.SCHEDULE_PATTERN
+  schedule_pattern: process.env.SCHEDULE_PATTERN,
+  run_schedule: process.env.RUN_SCHEDULE === 'true'
 }
 
 for (const key of Object.keys(config)) {

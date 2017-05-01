@@ -1,6 +1,7 @@
 'use strict'
 
 require('dotenv').config()
+
 const schedule = require('node-schedule')
 const Timer = require('./lib/timer')
 const Logger = require('./lib/logger')
@@ -15,11 +16,14 @@ const { run } = require('./lib/utils')
 const timer = new Timer()
 
 // startWorker is our main worker method
-// responsible for fetching results, processing images
+// responsible for fetching results, processing artwork
 // and posting to instagram
 const startWorker = async () => {
   timer.start()
   Logger.log('info', 'Starting worker')
+
+  // new instagram session
+  let session = null
 
   for (let comp of competitions) {
     const processed = { done: [], failed: [] }
@@ -36,13 +40,18 @@ const startWorker = async () => {
       }
 
       if (config.enable_posting) {
-        res = await run(instagram.post, res.value, comp, fixture)
+        // use existing session or create a new one
+        session = session || await instagram.login(
+          config.instagram_username, config.instagram_password)
+
+        res = await run(instagram.post, session, res.value, comp, fixture)
         if (res.error) {
           Logger.log('error', res.error)
           complete(scores, index, false, processed)
           continue
         }
       }
+
       complete(scores, index, true, processed)
     }
   }
@@ -52,30 +61,37 @@ const startWorker = async () => {
 // 1) processing artwork
 // 2) posting to instragram
 const complete = async (scores, index, ok, processed) => {
-  if (scores) {
-    const id = scores[index].id
-    if (ok) {
-      await repo.set(id)
-      processed.done.push(id)
-    } else {
-      processed.failed.push(id)
-    }
+  if (!scores)
+    return end([{status: 'info', message: 'No fixtures processed'}])
+
+  const id = scores[index].id
+  if (ok) {
+    await repo.set(id)
+    processed.done.push(id)
+  } else {
+    processed.failed.push(id)
   }
 
-  if (!scores || index === scores.length - 1) {
-    timer.stop()
-    if (!scores) {
-      Logger.log('info', `No fixtures processed`)
-    }
-    else {
-      if (processed.done.length > 0)
-        Logger.log('success', `${processed.done.length} processed`)
-      if (processed.failed.length > 0)
-        Logger.log('warning', `${processed.failed.length} failed`)
-    }
-    Logger.log('info', timer.report)
-    process.exit()
-  }
+  if (index < scores.length - 1)
+    return
+
+  const events = []
+  if (processed.done.length > 0)
+    events.push({status: 'success', message: `${processed.done.length} processed`})
+  if (processed.failed.length > 0)
+    events.push({status: 'warning', message: `${processed.failed.length} failed`})
+
+  return end(events)
 }
+
+const end = (events) => {
+  timer.stop()
+  events.forEach((event) => Logger.log(event.status, event.message))
+  Logger.log('info', timer.report)
+  process.exit()
+}
+
+if (!config.run_schedule)
+  return startWorker()
 
 schedule.scheduleJob(config.schedule_pattern, startWorker)

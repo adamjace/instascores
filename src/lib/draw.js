@@ -97,9 +97,9 @@ const template = (fixture, canvas, ctx) => {
   ctx.font = '115px thin'
   ctx.fillStyle = theme.teamNameBg
   const home = ctx.measureText(homeTeam);
-  ctx.fillRect(0, top2 - 115, home.width + (fixture.home.score < 10 ? 200 : 240), 150)
+  ctx.fillRect(0, top2 - 115, home.width + (fixture.home.score < 10 ? 210 : 250), 150)
   const away = ctx.measureText(awayTeam);
-  ctx.fillRect(0, top3 - 115, away.width + (fixture.away.score < 10 ? 200 : 240), 150)
+  ctx.fillRect(0, top3 - 115, away.width + (fixture.away.score < 10 ? 210 : 250), 150)
 
   ctx.fillStyle = theme.teamNameColour
   ctx.fillText(homeTeam, left, top2)

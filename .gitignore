@@ -36,13 +36,10 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-# pem
+
 key.pem
 launch.sh
 redis.sh
-
-# config
 .env
-
-# output
 output/
+src/lib/cookies/
