@@ -62,7 +62,7 @@ const startWorker = async () => {
 // 2) posting to instragram
 const complete = async (scores, index, ok, processed) => {
   if (!scores)
-    return end([{status: 'info', message: 'No fixtures processed'}])
+    return exit([{status: 'info', message: 'No fixtures processed'}])
 
   const id = scores[index].id
   if (ok) {
@@ -75,18 +75,18 @@ const complete = async (scores, index, ok, processed) => {
   if (index < scores.length - 1)
     return
 
-  const events = []
+  const logs = []
   if (processed.done.length > 0)
-    events.push({status: 'success', message: `${processed.done.length} processed`})
+    logs.push({status: 'success', message: `${processed.done.length} processed`})
   if (processed.failed.length > 0)
-    events.push({status: 'warning', message: `${processed.failed.length} failed`})
+    logs.push({status: 'warning', message: `${processed.failed.length} failed`})
 
-  return end(events)
+  return exit(logs)
 }
 
-const end = (events) => {
+const exit = (logs) => {
   timer.stop()
-  events.forEach((event) => Logger.log(event.status, event.message))
+  logs.forEach((log) => Logger.log(log.status, log.message))
   Logger.log('info', timer.report)
   process.exit()
 }
