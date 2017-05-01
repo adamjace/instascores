@@ -41,5 +41,5 @@ key.pem
 launch.sh
 redis.sh
 .env
-output/
-src/lib/cookies/
+src/lib/cookies/instascores.json
+output
