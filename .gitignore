@@ -39,6 +39,7 @@ jspm_packages
 key.pem
 launch.sh
 redis.sh
+download.sh
 .env
 src/lib/cookies
 output

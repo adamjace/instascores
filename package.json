@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.4.1",
+    "canvas": "git+https://github.com/automattic/node-canvas.git#master",
     "dotenv": "^4.0.0",
     "instagram-private-api": "^0.5.16",
     "node-schedule": "^1.2.1",
