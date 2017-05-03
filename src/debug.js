@@ -4,7 +4,6 @@ require('dotenv').config()
 
 const Timer = require('./lib/timer')
 const Logger = require('./lib/logger')
-const config = require('./config')
 const draw = require('./lib/draw')
 const { run } = require('./lib/utils')
 

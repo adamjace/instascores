@@ -1,11 +1,9 @@
 'use strict'
 
 const fs = require('fs')
-const path = require('path')
 const Canvas = require('canvas')
 const async = require('./async')
 const Logger = require('./logger')
-const _ = require('lodash')
 
 const thin = new Canvas.Font('Radikal', 'src/images/fonts/Radikal.otf')
 const bold = new Canvas.Font('Radikal Bold', 'src/images/fonts/Radikal Bold.otf')
@@ -96,9 +94,9 @@ const template = (fixture, canvas, ctx) => {
   // team names
   ctx.font = '115px "Radikal"'
   ctx.fillStyle = theme.teamNameBg
-  const home = ctx.measureText(homeTeam);
+  const home = ctx.measureText(homeTeam)
   ctx.fillRect(0, top2 - 115, home.width + (fixture.home.score < 10 ? 210 : 250), 150)
-  const away = ctx.measureText(awayTeam);
+  const away = ctx.measureText(awayTeam)
   ctx.fillRect(0, top3 - 115, away.width + (fixture.away.score < 10 ? 210 : 250), 150)
 
   ctx.fillStyle = theme.teamNameColour
@@ -113,9 +111,9 @@ const template = (fixture, canvas, ctx) => {
   // full time
   ctx.font = '30px "Radikal Bold"'
   ctx.fillStyle = theme.preTextBg
-  const md = ctx.measureText(matchDay);
+  const md = ctx.measureText(matchDay)
   ctx.fillRect(0, top1 - 32, md.width + 20, 45)
-  const ft = ctx.measureText(fullTime);
+  const ft = ctx.measureText(fullTime)
   ctx.fillRect(0, top1 - 32 + 50, ft.width + 20, 45)
 
   ctx.fillStyle = theme.preTextColour
@@ -132,11 +130,6 @@ const drawImage = (ctx, path, left, top) => {
 const drawRect = (ctx, color, top, left, width, height) => {
   ctx.fillStyle = color
   ctx.fillRect(top, left, width, height)
-}
-
-const setFont = (ctx, font, color) => {
-  ctx.font = font
-  ctx.fillStyle = color
 }
 
 const handleError = (reject, error) => {
