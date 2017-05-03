@@ -23,28 +23,28 @@ const startWorker = async () => {
   // instagram session
   let session = null
 
-  // iterate over each competition
   for (let comp of competitions) {
     const processed = { done: [], failed: [] }
     const fixtures = await getscores(comp)
+
     if (fixtures.length === 0)
       complete()
 
-    processFixtures(session, fixtures, processed)
+    processFixtures(session, fixtures, comp, processed)
   }
 }
 
 // processFixtures handles:
 // 1) processing artwork
 // 2) posting to instragram
-const processFixtures = async (session, fixtures, processed) => {
+const processFixtures = async (session, fixtures, comp, processed) => {
 
   for (let [index, fixture] of fixtures.entries()) {
     // draw artwork
     let res = await run(draw, fixture)
     if (res.error) {
       Logger.log('error', res.error)
-      complete(fixtures, index, false, processed)
+      complete(fixtures, index, processed)
       continue
     }
 
@@ -57,17 +57,17 @@ const processFixtures = async (session, fixtures, processed) => {
       res = await run(instagram.post, session, res.value, comp, fixture)
       if (res.error) {
         Logger.log('error', res.error)
-        complete(fixtures, index, false, processed)
+        complete(fixtures, index, processed)
         continue
       }
     }
 
-    complete(fixtures, index, true, processed)
+    complete(fixtures, index, processed, true)
   }
 }
 
 // handles completed attempts
-const complete = async (fixtures, index, ok, processed) => {
+const complete = async (fixtures, index, processed, ok) => {
   if (!fixtures)
     return exit([{status: 'info', message: 'No fixtures processed'}])
 
