@@ -7,9 +7,6 @@ const async = require('./async')
 const Logger = require('./logger')
 const _ = require('lodash')
 
-//Canvas.registerFont('src/images/fonts/Radikal.otf', {family: 'Radikal'});
-//Canvas.registerFont('src/images/fonts/Radikal Bold.otf', {family: 'Radikal Bold'});
-
 const thin = new Canvas.Font('Radikal', 'src/images/fonts/Radikal.otf')
 const bold = new Canvas.Font('Radikal Bold', 'src/images/fonts/Radikal Bold.otf')
 
