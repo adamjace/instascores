@@ -7,9 +7,9 @@ const Timer = require('./lib/timer')
 const Logger = require('./lib/logger')
 const config = require('./config')
 const repo = require('./db/repo')
-const getscores = require('./lib/getscores')
 const draw = require('./lib/draw')
 const instagram = require('./lib/instagram')
+const { getFixtures } = require('./lib/footballdata')
 const { competitions } = require('./competitions/index')
 const { run } = require('./lib/utils')
 
@@ -20,24 +20,24 @@ const startWorker = async () => {
   timer.start()
   Logger.log('info', 'Starting worker')
 
-  // instagram session
-  let session = null
-
   for (let comp of competitions) {
     const processed = { done: [], failed: [] }
-    const fixtures = await getscores(comp)
-
+    const fixtures = await getFixtures(comp)
     if (fixtures.length === 0)
       complete()
 
-    processFixtures(session, fixtures, comp, processed)
+    processFixtures(fixtures, comp, processed)
   }
 }
 
 // processFixtures handles:
 // 1) processing artwork
 // 2) posting to instragram
-const processFixtures = async (session, fixtures, comp, processed) => {
+const processFixtures = async (fixtures, comp, processed) => {
+
+  // create a new instagram session
+  const session = await instagram.login(
+    config.instagram_username, config.instagram_password)
 
   for (let [index, fixture] of fixtures.entries()) {
     // draw artwork
@@ -49,10 +49,6 @@ const processFixtures = async (session, fixtures, comp, processed) => {
     }
 
     if (config.enable_posting) {
-      // use existing session or create a new one
-      session = session || await instagram.login(
-        config.instagram_username, config.instagram_password)
-
       // post to instagram
       res = await run(instagram.post, session, res.value, comp, fixture)
       if (res.error) {
@@ -68,10 +64,13 @@ const processFixtures = async (session, fixtures, comp, processed) => {
 
 // handles completed attempts
 const complete = async (fixtures, index, processed, ok) => {
+
   if (!fixtures)
     return exit([{status: 'info', message: 'No fixtures processed'}])
 
+  const logs = []
   const id = fixtures[index].id
+
   if (ok) {
     await repo.set(id)
     processed.done.push(id)
@@ -82,7 +81,6 @@ const complete = async (fixtures, index, processed, ok) => {
   if (index < fixtures.length - 1)
     return
 
-  const logs = []
   if (processed.done.length > 0)
     logs.push({status: 'success', message: `${processed.done.length} processed`})
   if (processed.failed.length > 0)

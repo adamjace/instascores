@@ -64,7 +64,6 @@ const draw = (fixture) => {
   ctx.addFont(bold)
 
   template(fixture, canvas, ctx)
-
   return async((resolve, reject) => {
     const imagePath = `output/${fixture.id}.jpg`
     const fileStream = canvas.createJPEGStream({

@@ -31,6 +31,15 @@
   "jest": {
     "verbose": "true",
     "bail": "true",
-    "unmockedModulePathPatterns": []
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/bluebird/",
+      "<rootDir>/node_modules/canvas/",
+      "<rootDir>/node_modules/request-promise",
+      "<rootDir>/src/db/repo",
+      "<rootDir>/src/lib/async",
+      "<rootDir>/src/lib/draw",
+      "<rootDir>/src/lib/footballdata",
+      "<rootDir>/src/lib/utils"
+    ]
   }
 }

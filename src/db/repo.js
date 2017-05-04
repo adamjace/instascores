@@ -4,25 +4,27 @@ const async = require('../lib/async')
 
 // repository wrapper
 // get: fetches data from redis
-// set: stores to redis
-const get = (id) => {
+// set: stores a true value to redis
+// del: delete key from redis
+const get = (key) => {
   return async((resolve, reject) => {
-    db.getAsync(id).then((value, err) => {
+    db.getAsync(key).then((value, err) => {
       if (err) return reject(err)
-      Logger.log('info', `fetching from redis "${id}"`)
+      Logger.log('info', `fetching from redis "${key}"`)
       return resolve(value)
     })
   })
 }
 
-const set = (id) => {
+const set = (key) => {
   return async((resolve) => {
-    db.setAsync(id, true).then(() => {
-      Logger.log('info', `saving to redis "${id}"`)
+    db.setAsync(key, true).then(() => {
+      Logger.log('info', `saving to redis "${key}"`)
       return resolve(true)
     })
   })
 }
+
 
 module.exports = {
   get, set

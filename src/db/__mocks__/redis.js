@@ -1,27 +1,31 @@
 const async = require('../../lib/async')
 
-let context = ''
+let store = {}
 
-const db = {
+const getAsync = (key) => {
+  return async((resolve) => {
+    resolve(store[key])
+  })
+}
+
+const setAsync = (key) => {
+  store[key] = true
+  return async((resolve) => {
+    resolve(store[key])
+  })
+}
+
+const redis = {
   getAsync: getAsync,
   setAsync: setAsync
 }
 
-function getAsync() {
-  return async((resolve) => {
-    resolve(context)
-  })
+redis.__clear = () => {
+  store = {}
 }
 
-function setAsync(senderId, context) {
-  db.__setContext(context)
-  return async((resolve) => {
-    resolve(context)
-  })
+redis.__set = (...args) => {
+  args.forEach((key) => store[key] = true)
 }
 
-db.__setContext = (value) => {
-  context = value
-}
-
-module.exports = db
+module.exports = redis
