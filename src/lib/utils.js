@@ -10,7 +10,7 @@ const hashcode = (input) => {
 }
 
 // utility method to neatly call and handle async/await
-// responses in a formatted map object
+// responses in a structured format
 // { value, error }
 const run = async (func, ...args) => {
   try {

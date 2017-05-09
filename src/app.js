@@ -23,6 +23,7 @@ const startWorker = async () => {
   for (let comp of competitions) {
     const processed = { done: [], failed: [] }
     const fixtures = await getFixtures(comp)
+
     if (fixtures.length === 0)
       complete()
 
@@ -36,8 +37,7 @@ const startWorker = async () => {
 const processFixtures = async (fixtures, comp, processed) => {
 
   // create a new instagram session
-  const session = await instagram.login(
-    config.instagram_username, config.instagram_password)
+  const session = await instagram.login(config.instagram_username, config.instagram_password)
 
   for (let [index, fixture] of fixtures.entries()) {
     // draw artwork
@@ -65,28 +65,29 @@ const processFixtures = async (fixtures, comp, processed) => {
 // handles completed attempts
 const complete = async (fixtures, index, processed, ok) => {
 
-  if (!fixtures)
-    return exit([{status: 'info', message: 'No fixtures processed'}])
+  if (!fixtures) return exit([{status: 'info', message: 'No fixtures processed'}])
 
-  const logs = []
   const id = fixtures[index].id
 
-  if (ok) {
-    await repo.set(id)
-    processed.done.push(id)
-  } else {
-    processed.failed.push(id)
+  if (ok) await repo.set(id)
+
+  processed[ok ? 'done' : 'failed'].push(id)
+
+  // this is the last record. log and exit
+  if (index === fixtures.length - 1) {
+
+    const logs = []
+    addLogs(logs, processed, 'success', 'done')
+    addLogs(logs, processed, 'warning', 'failed')
+
+    return exit(logs)
   }
+}
 
-  if (index < fixtures.length - 1)
-    return
-
-  if (processed.done.length > 0)
-    logs.push({status: 'success', message: `${processed.done.length} processed`})
-  if (processed.failed.length > 0)
-    logs.push({status: 'warning', message: `${processed.failed.length} failed`})
-
-  return exit(logs)
+const addLogs = (logs, processed, status, outcome) => {
+  if (processed[outcome].length > 0) {
+    logs.push({status, message: `${processed[outcome].length} ${outcome}`})
+  }
 }
 
 // and we're done

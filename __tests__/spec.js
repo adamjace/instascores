@@ -31,7 +31,7 @@ describe('Tests', async () => {
       }
     }
 
-    const res = await run(draw, fixture)
+    await run(draw, fixture)
     const path = 'output/__test.jpg'
     const file = fs.readFileSync(path)
     expect(file).not.toEqual(undefined)
