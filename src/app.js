@@ -64,22 +64,19 @@ const processFixtures = async (fixtures, comp, processed) => {
 
 // handles completed attempts
 const complete = async (fixtures, index, processed, ok) => {
+  if (!fixtures)
+    return exit([{status: 'info', message: 'No fixtures processed'}])
 
-  if (!fixtures) return exit([{status: 'info', message: 'No fixtures processed'}])
+  if (ok)
+    await repo.set(fixtures[index].id)
 
-  const id = fixtures[index].id
-
-  if (ok) await repo.set(id)
-
-  processed[ok ? 'done' : 'failed'].push(id)
+  processed[ok ? 'done' : 'failed'].push(fixtures[index].id)
 
   // this is the last record. log and exit
   if (index === fixtures.length - 1) {
-
     const logs = []
     addLogs(logs, processed, 'success', 'done')
     addLogs(logs, processed, 'warning', 'failed')
-
     return exit(logs)
   }
 }
