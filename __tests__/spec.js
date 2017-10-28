@@ -35,7 +35,7 @@ describe('Tests', async () => {
     const path = 'output/__test.jpg'
     const file = fs.readFileSync(path)
     expect(file).not.toEqual(undefined)
-    cleanUpFs(path)
+    //cleanUpFs(path)
   })
 
   it('should return fixtures that have not been drawn', async () => {

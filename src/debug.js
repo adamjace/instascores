@@ -26,7 +26,10 @@ const fixture = {
 const startWorker = async () => {
   timer.start()
   Logger.log('info', 'Starting debug worker')
-  await run(draw, fixture)
+  const res = await run(draw, fixture)
+  if (res.error) {
+    console.log(res.error)
+  }
   timer.stop()
   Logger.log('info', timer.report)
 }

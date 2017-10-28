@@ -1,12 +1,15 @@
 'use strict'
 
 const fs = require('fs')
-const Canvas = require('canvas')
+const { registerFont, createCanvas, loadImage } = require('canvas');
 const async = require('./async')
 const Logger = require('./logger')
 
-const thin = new Canvas.Font('Radikal', 'src/images/fonts/Radikal.otf')
-const bold = new Canvas.Font('Radikal Bold', 'src/images/fonts/Radikal Bold.otf')
+// const thin = new Canvas.Font('Radikal', 'src/images/fonts/Radikal.otf')
+// const bold = new Canvas.Font('Radikal Bold', 'src/images/fonts/Radikal Bold.otf')
+
+const thin = registerFont('src/images/fonts/Radikal.otf', {family: 'Radikal'});
+const bold = registerFont('src/images/fonts/Radikal Bold.otf', {family: 'Radikal Bold'});
 
 const themes = [
   {
@@ -57,11 +60,10 @@ const themes = [
 ]
 
 const draw = (fixture) => {
-
-  const canvas = new Canvas(1080, 1080)
+  const canvas = createCanvas(1080, 1080)
   const ctx = canvas.getContext('2d')
-  ctx.addFont(thin)
-  ctx.addFont(bold)
+  // ctx.addFont(thin)
+  // ctx.addFont(bold)
 
   template(fixture, canvas, ctx)
   return async((resolve, reject) => {
@@ -121,9 +123,13 @@ const template = (fixture, canvas, ctx) => {
 }
 
 const drawImage = (ctx, path, left, top) => {
-  const img = new Canvas.Image()
-  img.src = fs.readFileSync(path)
-  ctx.drawImage(img, left, top)
+  // const img = new Canvas.Image()
+  // img.src = fs.readFileSync(path)
+  // ctx.drawImage(img, left, top)
+
+  loadImage(path).then((img) => {
+    ctx.drawImage(img, left, top)
+  })
 }
 
 const drawRect = (ctx, color, top, left, width, height) => {

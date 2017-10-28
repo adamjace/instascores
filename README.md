@@ -1,8 +1,10 @@
-# Mucho Lingo
+# Instascores
 
-¡Hola! Salut! Konnichiwa! 
+Project for retrieving live football scores and posting generated artwork to
+instagram
 
-This is the source code for Mucho Lingo (the translator bot for FB Messenger)
+## Dependencies
 
-Play with me here
-http://mucholingo.me
+This project uses `canvas` which requires `cairo` to be installed on the host machine
+
+Installation instructions: https://github.com/Automattic/node-canvas
