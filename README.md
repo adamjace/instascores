@@ -10,9 +10,9 @@ Node worker application for publishing live English Premier League results via I
 - Post via Instagram
 
 
-# Installation
+## Installation
     npm install
 
 
-# Run the worker
+## Run the worker
     npm run start
