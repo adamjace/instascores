@@ -1,4 +1,4 @@
-# Instascores
+# instascores
 
 Node worker application for publishing live English Premier League results via Instagram
 
@@ -10,8 +10,8 @@ Node worker application for publishing live English Premier League results via I
 
 ### Generated artwork examples
 
-![](https://gitub.com/adamjace/instascores/images/examples/1.jpg =100x100)
-![](https://gitub.com/adamjace/instascores/images/examples/2.jpg =100x100)
-![](https://gitub.com/adamjace/instascores/images/examples/3.jpg =100x100)
-![](https://gitub.com/adamjace/instascores/images/examples/4.jpg =100x100)
-![](https://gitub.com/adamjace/instascores/images/examples/5.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/src/images/examples/1.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/src/images/examples/2.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/src/images/examples/3.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/src/images/examples/4.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/src/images/examples/5.jpg =100x100)
