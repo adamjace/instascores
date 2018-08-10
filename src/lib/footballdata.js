@@ -10,8 +10,8 @@ const { getTeam } = require('../competitions');
 const options = (uri) => {
     return {
         uri,
-        json: true,
-        headers: {
+        'json': true,
+        'headers': {
             'X-Auth-Token': config.football_data_auth_token
         }
     };
@@ -55,14 +55,17 @@ const getFixturesForDrawing = async (fixtures) => {
 const transformFixtures = (fixtures, comp) => {
     let transformed = [];
     for (let [index, fixture] of fixtures.entries()) {
+
         const {
             matchday,
             awayTeamName,
             homeTeamName,
             status
         } = fixture;
+
         const homeTeam = getTeam(comp, homeTeamName);
         const awayTeam = getTeam(comp, awayTeamName);
+
         transformed.push({
             id: hashcode(`${matchday}${homeTeamName}${awayTeamName}`),
             index,
@@ -80,6 +83,7 @@ const transformFixtures = (fixtures, comp) => {
             }
         });
     }
+
     return transformed;
 };
 

@@ -25,7 +25,6 @@ const set = (key) => {
     });
 };
 
-
 module.exports = {
     get,
     set

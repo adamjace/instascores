@@ -8,51 +8,52 @@ const Logger = require('./logger');
 const thin = new Canvas.Font('Radikal', 'src/images/fonts/Radikal.otf');
 const bold = new Canvas.Font('Radikal Bold', 'src/images/fonts/Radikal Bold.otf');
 
-const themes = [{
+const themes = [
+    {
         // white
-    bg: '#FFF',
-    logo: 'lion2.png',
-    preTextBg: 'rgba(235,255,0, 1)',
-    preTextColour: '#000',
-    teamNameBg: 'rgba(0,0,0,0.85)',
-    teamNameColour: '#FFF'
-},
-{
+        'bg': '#FFF',
+        'logo': 'lion2.png',
+        'preTextBg': 'rgba(235,255,0, 1)',
+        'preTextColour': '#000',
+        'teamNameBg': 'rgba(0,0,0,0.85)',
+        'teamNameColour': '#FFF'
+    },
+    {
         // pink
-    bg: '#ff015b',
-    logo: 'lion.png',
-    preTextBg: 'rgba(235,255,0, 1)',
-    preTextColour: '#000',
-    teamNameBg: 'rgba(0,0,0,0.85)',
-    teamNameColour: '#FFF'
-},
-{
+        'bg': '#ff015b',
+        'logo': 'lion.png',
+        'preTextBg': 'rgba(235,255,0, 1)',
+        'preTextColour': '#000',
+        'teamNameBg': 'rgba(0,0,0,0.85)',
+        'teamNameColour': '#FFF'
+    },
+    {
         // blue
-    bg: '#05f1ff',
-    logo: 'lion.png',
-    preTextBg: '#FFF',
-    preTextColour: '#000',
-    teamNameBg: 'rgba(0,0,0,0.85)',
-    teamNameColour: '#FFF'
-},
-{
+        'bg': '#05f1ff',
+        'logo': 'lion.png',
+        'preTextBg': '#FFF',
+        'preTextColour': '#000',
+        'teamNameBg': 'rgba(0,0,0,0.85)',
+        'teamNameColour': '#FFF'
+    },
+    {
         // green
-    bg: '#00ff87',
-    logo: 'lion.png',
-    preTextBg: '#FFF',
-    preTextColour: '#000',
-    teamNameBg: 'rgba(0,0,0,0.85)',
-    teamNameColour: '#FFF'
-},
-{
+        'bg': '#00ff87',
+        'logo': 'lion.png',
+        'preTextBg': '#FFF',
+        'preTextColour': '#000',
+        'teamNameBg': 'rgba(0,0,0,0.85)',
+        'teamNameColour': '#FFF'
+    },
+    {
         // yellow
-    bg: '#ebff00',
-    logo: 'lion.png',
-    preTextBg: '#FFF',
-    preTextColour: '#000',
-    teamNameBg: 'rgba(0,0,0,0.90)',
-    teamNameColour: '#FFF'
-}
+        'bg': '#ebff00',
+        'logo': 'lion.png',
+        'preTextBg': '#FFF',
+        'preTextColour': '#000',
+        'teamNameBg': 'rgba(0,0,0,0.90)',
+        'teamNameColour': '#FFF'
+    }
 ];
 
 const draw = (fixture) => {
@@ -64,10 +65,12 @@ const draw = (fixture) => {
 
     template(fixture, canvas, ctx);
     return async ((resolve, reject) => {
+
         const imagePath = `output/${fixture.id}.jpg`;
         const fileStream = canvas.createJPEGStream({
             quality: 100
         }).pipe(fs.createWriteStream(imagePath));
+
         fileStream.on('finish', () => resolve(imagePath));
         fileStream.on('error', (error) => handleError(reject, error));
     });

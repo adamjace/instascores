@@ -1,7 +1,6 @@
 'use strict';
 
 const Client = require('instagram-private-api').V1;
-
 const device = new Client.Device('instascores');
 const storage = new Client.CookieFileStorage(__dirname + '/cookies/instascores.json');
 
@@ -16,7 +15,13 @@ const login = async (username, password) => {
 
 const post = async (session, path, comp, fixture) => {
     const upload = await Client.Upload.photo(session, path);
-    await Client.Media.configurePhoto(session, upload.params.uploadId, tags(comp, fixture));
+
+    await Client.Media.configurePhoto(
+        session,
+        upload.params.uploadId,
+        tags(comp, fixture)
+    );
+
     return upload;
 };
 
