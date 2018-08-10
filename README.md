@@ -6,4 +6,12 @@ Node worker application for publishing live English Premier League results via I
 
 - Poll `football-data.org` for completed match results
 - Generate artwork with competing teams and final scores using Canvas and Cairo
-- Post to Instagram account
+- Post via Instagram
+
+### Generated artwork examples
+
+![](https://gitub.com/adamjace/instascores/images/examples/1.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/images/examples/2.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/images/examples/3.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/images/examples/4.jpg =100x100)
+![](https://gitub.com/adamjace/instascores/images/examples/5.jpg =100x100)
