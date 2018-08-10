@@ -16,3 +16,8 @@ Node worker application for publishing live English Premier League results via I
 
 ## Run the worker
     npm run start
+
+
+### See live example
+
+https://www.instagram.com/autoscores_premierleague/
