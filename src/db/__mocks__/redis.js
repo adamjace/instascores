@@ -1,31 +1,31 @@
-const async = require('../../lib/async')
+const async = require('../../lib/async');
 
-let store = {}
+let store = {};
 
 const getAsync = (key) => {
-  return async((resolve) => {
-    resolve(store[key])
-  })
-}
+    return async ((resolve) => {
+        resolve(store[key]);
+    });
+};
 
 const setAsync = (key) => {
-  store[key] = true
-  return async((resolve) => {
-    resolve(store[key])
-  })
-}
+    store[key] = true;
+    return async ((resolve) => {
+        resolve(store[key]);
+    });
+};
 
 const redis = {
-  getAsync: getAsync,
-  setAsync: setAsync
-}
+    getAsync: getAsync,
+    setAsync: setAsync
+};
 
 redis.__clear = () => {
-  store = {}
-}
+    store = {};
+};
 
 redis.__set = (...args) => {
-  args.forEach((key) => store[key] = true)
-}
+    args.forEach((key) => store[key] = true);
+};
 
-module.exports = redis
+module.exports = redis;

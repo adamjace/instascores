@@ -8,7 +8,7 @@
     "stop": "sudo forever stop src/app.js",
     "restart": "sudo forever restart -v --minUptime=5000 src/app.js",
     "dev": "sudo node src/app.js",
-    "lint": "eslint ./src --ext .js",
+    "lint": "eslint ./src --ext .js --fix",
     "test": "jest --no-cache || true"
   },
   "author": "Adam Goldin",
